@@ -58,7 +58,13 @@ class _SignUpState extends State<SignUp> {
           ),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            // validate input 
+
+            // create account 
+
+            // go to dashboard 
+          },
           child: const Text('Create account'),
         ),
       ],
