@@ -29,7 +29,7 @@ class _UniversalAppBarState extends State<UniversalAppBar> {
           child: IconButton(
             icon: const Icon(Icons.support_agent_outlined, color: Colors.black),
             onPressed: () {
-              // Add your onPressed code here!
+              Navigator.pushNamed(context, '/support');
             },
           ),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seebot/components/universal_appbar.dart';
+import 'package:seebot/models/place.dart';
 
 class LoginScreen extends StatefulWidget {
 
@@ -15,7 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const UniversalAppBar(title : 'Log In'),
+      appBar: const UniversalAppBar(title : 'See bot'),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -32,6 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
               },
               child: const Text('No account -> sign up'),
             ),
+            Text(getCurrentLocation().toString()),
           ],
         ),
       ),
