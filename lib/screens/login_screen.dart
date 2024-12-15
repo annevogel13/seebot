@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seebot/components/universal_appbar.dart';
 import 'package:seebot/functions/current_location.dart';
+import 'package:seebot/screens/signup_screen.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,13 +17,23 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
 
 
-  Object validateInput(){
+  Map<String, String> validateInput(){
 
     final String emailAdress = _emailadressController.text; 
     final String password = _passwordController.text; 
 
-    return {emailAdress : emailAdress, password : password};
+    return {'emailAdress' : emailAdress, 'password' : password};
     
+  }
+
+  void _openSignupOverlay(){
+    final result = validateInput();
+
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context, 
+      builder: (ctx) => SignUp(email: result['emailAdress']!, password: result['password']!)
+    );
   }
 
   @override
@@ -64,15 +75,16 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             ElevatedButton(
               onPressed: () {
-                validateInput(); 
-                Navigator.pushNamed(context, '/dashboard');
+                final result = validateInput(); 
+                Navigator.pushNamed(
+                  context, 
+                  '/dashboard',
+                  arguments: result);
               },
               child: const Text('Log In'),
             ),
             ElevatedButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/signup');
-              },
+              onPressed: _openSignupOverlay,
               child: const Text('No account -> sign up'),
             ),
             Text(getCurrentLocation().toString()),

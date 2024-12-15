@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:seebot/screens/login_screen.dart';
 import 'package:seebot/screens/dashboard_screen.dart';
-import 'package:seebot/screens/signup_screen.dart';
 import 'package:seebot/screens/showing_areas_screen.dart';
 import 'package:seebot/screens/working_area_screen.dart';
 import 'package:seebot/screens/support_screen.dart';
@@ -27,7 +26,6 @@ class _SeebotAppState extends State<SeebotApp> {
       home: const LoginScreen(),
       routes: <String, WidgetBuilder>{
         '/dashboard': (BuildContext context) => const Dashboard(),
-        '/signup': (BuildContext context) => const SignUp(),
         '/showArea': (BuildContext context) => const ShowArea(),
         '/createArea': (BuildContext context) => const WorkingOnArea(),
         '/support': (BuildContext context) => const SupportScreen(),

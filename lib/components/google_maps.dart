@@ -19,7 +19,7 @@ class _MapScreenState extends State<MapScreen> {
 
   // Markers and Polylines
   final Set<Marker> _markers = {};
-  final List<LatLng> _polylinePoints = [];
+  //final List<LatLng> _polylinePoints = [];
   final Set<Polyline> _polylines = {};
 
   // Initial Location (Center of the Map)
@@ -35,8 +35,8 @@ class _MapScreenState extends State<MapScreen> {
   Future<void> _getUserLocation() async {
     // Get user locationflutt
     position = await getCurrentLocation();
-    print("Position :");
-    print(position!.latitude + position!.longitude); 
+    //print("Position :");
+    //print(position!.latitude + position!.longitude); 
     // Add a marker for the user location
       setState(() {
         _initialCameraPosition = CameraPosition(
