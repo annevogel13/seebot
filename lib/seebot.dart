@@ -29,6 +29,7 @@ class _SeebotAppState extends State<SeebotApp> {
           primaryContainer: Color(0xFF1b5e7a), // Darker shade of primary
           secondary: Color(0xFF38a5a5), // #38a5a5
           secondaryContainer: Color(0xFF2a7d7d), // Darker shade of secondary
+          tertiary: Color(0xFFCEB5A7),
           surfaceBright: Color(0xFF57cc99), // #57cc99
           surface: Color(0xFFCEB5A7) ,  //Color(0xFF38a5a5), // #3aaed8
           error: Color(0xFFda291c), // #da291c
