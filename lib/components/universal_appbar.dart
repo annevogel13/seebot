@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seebot/components/universal_background.dart';
 
 class UniversalAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;
@@ -23,9 +24,10 @@ class _UniversalAppBarState extends State<UniversalAppBar> {
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 8.0),
           decoration: BoxDecoration(
-              border: Border.all(color: Colors.blue),
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.blue),
+            border: Border.all(color: Colors.transparent),
+            borderRadius: BorderRadius.circular(30),
+            gradient: surfaceGradient, // Use the defined gradient
+          ),
           child: IconButton(
             icon: const Icon(Icons.support_agent_outlined, color: Colors.black),
             onPressed: () {

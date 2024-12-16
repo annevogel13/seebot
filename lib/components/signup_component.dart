@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:seebot/components/universal_background.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key, required this.email, required this.password});
@@ -54,11 +55,7 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xFF3ab5b0), Color(0xFF3d99be), Color(0xFF56317a)],
-        ),
+        gradient: surfaceGradient,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -66,7 +63,7 @@ class _SignUpState extends State<SignUp> {
           Text(
             'Create account',
             style: TextStyle(
-                fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+                fontSize: 28, fontWeight: FontWeight.bold),
           ),
           Padding(
             padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -74,14 +71,10 @@ class _SignUpState extends State<SignUp> {
               maxLength: 50,
               keyboardType: TextInputType.emailAddress,
               controller: _emailadressController,
-              decoration: const InputDecoration(
+              decoration: InputDecoration(
                 labelText: 'Emailadress',
-                labelStyle: TextStyle(color: Color(0xFF56317A)),
-                filled: true,
-                fillColor: Colors.white,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(30)),
-                  borderSide: BorderSide(color: Colors.white),
                 ),
               ),
             ),
@@ -94,10 +87,7 @@ class _SignUpState extends State<SignUp> {
               controller: _passwordController,
               decoration: const InputDecoration(
                 labelText: 'Password',
-                filled: true,
-                fillColor: Colors.white,
                 border: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.white),
                   borderRadius: BorderRadius.all(Radius.circular(30)),
                 ),
               ),
@@ -111,12 +101,7 @@ class _SignUpState extends State<SignUp> {
                 Navigator.pushNamed(context, '/dashboard');
               }
             },
-            style: ElevatedButton.styleFrom(
-              side:
-                  BorderSide(color: Colors.white, width: 2), // Add white border
-            ),
-            child: const Text('Create account',
-                style: TextStyle(color: Color(0xFF56317a))),
+            child: const Text('Create account'),
           ),
         ],
       ),
