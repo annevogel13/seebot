@@ -35,6 +35,7 @@ dependencies:
   geolocator: ^13.0.2
   google_maps_flutter: ^2.10.0
   flutter_svg: ^2.0.16
+  fl_chart: ^0.69.2
 
 dev_dependencies:
   flutter_test:

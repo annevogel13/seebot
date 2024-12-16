@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seebot/components/universal_appbar.dart';
 import 'package:seebot/components/universal_background.dart';
+import 'package:seebot/components/chart_example.dart'; 
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -21,6 +22,7 @@ class _DashboardState extends State<Dashboard> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              LineChartSample2(), 
               ElevatedButton(
                 onPressed: () {
                   Navigator.pushNamed(context, '/showArea');
