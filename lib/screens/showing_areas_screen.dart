@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:seebot/components/universal_appbar.dart';
 import 'package:seebot/components/universal_background.dart';
 import 'package:seebot/models/areas.dart'; // Import the Area model
+import 'package:seebot/components/show_figure_on_map.dart'; // Import the PolygoneShowMap component
 
 class ShowArea extends StatelessWidget {
   const ShowArea({super.key});
@@ -31,7 +32,39 @@ class ShowArea extends StatelessWidget {
         child: ListView.builder(
           itemCount: areas.length,
           itemBuilder: (context, index) {
-            return areas[index].getListView(context);
+            return ListTile(
+              title: Text(areas[index].title),
+              subtitle: Text(areas[index].description),
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text(areas[index].title),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(areas[index].description),
+                          SizedBox(height: 10),
+                          SizedBox(
+                            height: 200,
+                            child: PolygoneShowMap(),
+                          ),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          child: Text('Close'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            );
           },
         ),
       ),

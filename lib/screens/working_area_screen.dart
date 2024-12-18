@@ -60,10 +60,14 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
       // Implement your save logic here
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Area saved: $title'),
+          content: Text('Area saved: $title with $description' ),
           duration: Duration(seconds: 2),
         ),
       );
+
+      // adding title / description 
+
+
 
       Navigator.pushNamed(context, '/showArea');
     } else {

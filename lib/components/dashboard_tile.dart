@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class dashboardTile extends StatelessWidget {
-  const dashboardTile({super.key, required this.child, required this.color});
+class DashboardTile extends StatelessWidget {
+  const DashboardTile({super.key, required this.child, required this.color});
 
   final Widget child;
   final Color color;
