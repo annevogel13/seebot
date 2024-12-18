@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:seebot/functions/current_location.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  const MapScreen({super.key, required this.currentLocation});
+
+  final Position currentLocation;
 
   @override
   State<MapScreen> createState() {
@@ -14,9 +15,13 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   GoogleMapController? _mapController;
-
   CameraPosition? _initialCameraPosition;
-  Position? position;
+
+  bool _isMapFrozen = false;
+
+  final Set<Marker> _markers = {};
+  final List<LatLng> _markerCoordinates = [];
+  final Set<Polygon> _polygons = {};
 
   @override
   void initState() {
@@ -25,10 +30,10 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Future<void> _getUserLocation() async {
-    position = await getCurrentLocation();
     setState(() {
       _initialCameraPosition = CameraPosition(
-        target: LatLng(position!.latitude, position!.longitude),
+        target: LatLng(
+            widget.currentLocation.latitude, widget.currentLocation.longitude),
         zoom: 20.0,
       );
     });
@@ -38,6 +43,39 @@ class _MapScreenState extends State<MapScreen> {
   void dispose() {
     _mapController?.dispose();
     super.dispose();
+  }
+
+  void _onMapTapped(LatLng position) {
+    debugPrint('I WAS TAPPED @MAP $position.toString()');
+    if (_isMapFrozen) {
+      setState(() {
+        _markers.add(
+          Marker(
+            markerId: MarkerId('marker_id_${_markers.length}'),
+            position: position,
+          ),
+        );
+      });
+
+      _markerCoordinates.add(position);
+      _updatePolygon(); 
+    }
+  }
+
+    // Update the polygon to form a closed shape
+  void _updatePolygon() {
+    if (_markerCoordinates.isNotEmpty) {
+      _polygons.clear(); // Remove the old polygon
+      _polygons.add(
+        Polygon(
+          polygonId: PolygonId('polygon_1'),
+          points: [..._markerCoordinates, _markerCoordinates.first], // Close the shape
+          fillColor: Colors.blue.withValues(alpha: .2), // Fill color with transparency
+          strokeColor: Colors.blue,
+          strokeWidth: 2,
+        ),
+      );
+    }
   }
 
   @override
@@ -50,17 +88,28 @@ class _MapScreenState extends State<MapScreen> {
               debugPrint("I WAS TAPPED @ STACK");
             },
             child: GoogleMap(
-              initialCameraPosition: _initialCameraPosition ??
-                  CameraPosition(
-                      target: LatLng(47.500714982217644, 9.741313618968784),
-                      zoom: 1),
+              initialCameraPosition: _initialCameraPosition!,
               onMapCreated: (controller) {
                 _mapController = controller;
               },
-              markers: {},
-              polylines: {},
-              onTap: (element) => {debugPrint("I WAS TAPPED")},
+              markers: _markers,
+              polygons: _polygons, 
+              onTap: _onMapTapped,
+              zoomGesturesEnabled: !_isMapFrozen,
+              scrollGesturesEnabled: !_isMapFrozen,
+              rotateGesturesEnabled: !_isMapFrozen,
+              tiltGesturesEnabled: !_isMapFrozen,
+              compassEnabled: false,
             ),
+          ),
+          IconButton(
+            onPressed: () {
+              setState(() {
+                _isMapFrozen = !_isMapFrozen;
+              });
+            },
+            icon: Icon(_isMapFrozen ? Icons.lock : Icons.lock_open),
+            tooltip: _isMapFrozen ? 'Unlock map' : 'Lock map',
           ),
         ],
       ),

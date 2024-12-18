@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:seebot/components/universal_appbar.dart';
 import 'package:seebot/components/universal_background.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:seebot/components/google_maps.dart'; 
 
 class WorkingOnArea extends StatefulWidget {
   const WorkingOnArea({super.key, required this.currentLocation});
@@ -42,13 +43,13 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
   }
 
   void _initializeCameraPosition() {
-      setState(() {
-        initialCameraPosition = CameraPosition(
-          target: LatLng(widget.currentLocation.latitude, widget.currentLocation.longitude),
-          zoom: 12.0, // Adjust zoom level as needed
-        );
-      });
-  
+    setState(() {
+      initialCameraPosition = CameraPosition(
+        target: LatLng(
+            widget.currentLocation.latitude, widget.currentLocation.longitude),
+        zoom: 12.0, // Adjust zoom level as needed
+      );
+    });
   }
 
   void saveArea() {
@@ -60,14 +61,12 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
       // Implement your save logic here
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Area saved: $title with $description' ),
+          content: Text('Area saved: $title with $description'),
           duration: Duration(seconds: 2),
         ),
       );
 
-      // adding title / description 
-
-
+      // adding title / description
 
       Navigator.pushNamed(context, '/showArea');
     } else {
@@ -129,8 +128,8 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.black),
                   ),
-                  child: GoogleMap(
-                    initialCameraPosition: initialCameraPosition,
+                  child: MapScreen(
+                    currentLocation: widget.currentLocation,
                   ),
                 ),
               SizedBox(height: 20),
