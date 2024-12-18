@@ -6,6 +6,8 @@ import 'package:seebot/screens/showing_areas_screen.dart';
 import 'package:seebot/screens/working_area_screen.dart';
 import 'package:seebot/screens/support_screen.dart';
 
+import 'package:geolocator/geolocator.dart';
+import 'package:seebot/functions/current_location.dart';
 
 class SeebotApp extends StatefulWidget {
 
@@ -19,6 +21,23 @@ class SeebotApp extends StatefulWidget {
 }
 
 class _SeebotAppState extends State<SeebotApp> {
+
+  late Position currentLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    final location = await getCurrentLocation();
+    setState(() {
+      currentLocation = location;
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -44,7 +63,7 @@ class _SeebotAppState extends State<SeebotApp> {
       routes: <String, WidgetBuilder>{
         '/dashboard': (BuildContext context) => const Dashboard(),
         '/showArea': (BuildContext context) => const ShowArea(),
-        '/createArea': (BuildContext context) => const WorkingOnArea(),
+        '/createArea': (BuildContext context) => WorkingOnArea(currentLocation: currentLocation,),
         '/support': (BuildContext context) => const SupportScreen(),
       },
     );

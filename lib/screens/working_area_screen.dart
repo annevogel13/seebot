@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:seebot/components/universal_appbar.dart';
 import 'package:seebot/components/universal_background.dart';
-import 'package:seebot/functions/current_location.dart'; // Import the getCurrentLocation function
+import 'package:geolocator/geolocator.dart';
 
 class WorkingOnArea extends StatefulWidget {
-  const WorkingOnArea({super.key});
+  const WorkingOnArea({super.key, required this.currentLocation});
+
+  final Position currentLocation;
 
   @override
   State<WorkingOnArea> createState() {
@@ -14,13 +16,11 @@ class WorkingOnArea extends StatefulWidget {
 }
 
 class _WorkingOnAreaState extends State<WorkingOnArea> {
-  CameraPosition initialCameraPosition = const CameraPosition(
-    target: LatLng(37.7749, -122.4194), // Default to San Francisco
-    zoom: 12.0, // Adjust zoom level as needed
-  );
+  late CameraPosition initialCameraPosition;
 
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController(); // Controller for description
+  final TextEditingController _descriptionController =
+      TextEditingController(); // Controller for description
   final FocusNode _titleFocusNode = FocusNode();
   final FocusNode _descriptionFocusNode = FocusNode();
   bool _isKeyboardVisible = false;
@@ -36,26 +36,19 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
 
   void _handleFocusChange() {
     setState(() {
-      _isKeyboardVisible = _titleFocusNode.hasFocus || _descriptionFocusNode.hasFocus;
+      _isKeyboardVisible =
+          _titleFocusNode.hasFocus || _descriptionFocusNode.hasFocus;
     });
   }
 
-  Future<void> _initializeCameraPosition() async {
-    try {
-      final position = await getCurrentLocation();
+  void _initializeCameraPosition() {
       setState(() {
-        _isKeyboardVisible = true;
         initialCameraPosition = CameraPosition(
-          target: LatLng(position.latitude, position.longitude),
+          target: LatLng(widget.currentLocation.latitude, widget.currentLocation.longitude),
           zoom: 12.0, // Adjust zoom level as needed
         );
-
-        _isKeyboardVisible = false;
       });
-    } catch (e) {
-      // Handle the error, e.g., show a snackbar or dialog
-      print('Error fetching location: $e');
-    }
+  
   }
 
   void saveArea() {
@@ -97,54 +90,53 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
     return Scaffold(
       appBar: const UniversalAppBar(title: 'Working on area'),
       body: UniversalBackground(
-
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: 300, // Set the width to match the container below
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child: TextField(
+                  controller: _titleController,
+                  focusNode: _titleFocusNode,
+                  decoration: const InputDecoration(
+                    labelText: 'Area Title',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              Container(
+                width: 300, // Set the width to match the container below
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child: TextField(
+                  controller: _descriptionController,
+                  focusNode: _descriptionFocusNode,
+                  decoration: const InputDecoration(
+                    labelText: 'Area Description',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              if (!_isKeyboardVisible)
                 Container(
-                  width: 300, // Set the width to match the container below
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                  child: TextField(
-                    controller: _titleController,
-                    focusNode: _titleFocusNode,
-                    decoration: const InputDecoration(
-                      labelText: 'Area Title',
-                      border: OutlineInputBorder(),
-                    ),
+                  height: 300,
+                  width: 300,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black),
+                  ),
+                  child: GoogleMap(
+                    initialCameraPosition: initialCameraPosition,
                   ),
                 ),
-                Container(
-                  width: 300, // Set the width to match the container below
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                  child: TextField(
-                    controller: _descriptionController,
-                    focusNode: _descriptionFocusNode,
-                    decoration: const InputDecoration(
-                      labelText: 'Area Description',
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
-                ),
-                if (!_isKeyboardVisible)
-                  Container(
-                    height: 300,
-                    width: 300,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                    ),
-                    child: GoogleMap(
-                      initialCameraPosition: initialCameraPosition,
-                    ),
-                  ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: saveArea,
-                  child: const Text('Save Area'),
-                ),
-              ],
-            ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: saveArea,
+                child: const Text('Save Area'),
+              ),
+            ],
           ),
+        ),
       ),
     );
   }
