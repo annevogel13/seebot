@@ -26,6 +26,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
+
     _getUserLocation();
   }
 
@@ -53,24 +54,29 @@ class _MapScreenState extends State<MapScreen> {
           Marker(
             markerId: MarkerId('marker_id_${_markers.length}'),
             position: position,
+            onTap: () {},
           ),
         );
       });
 
       _markerCoordinates.add(position);
-      _updatePolygon(); 
+      _updatePolygon();
     }
   }
 
-    // Update the polygon to form a closed shape
+  // Update the polygon to form a closed shape
   void _updatePolygon() {
     if (_markerCoordinates.isNotEmpty) {
       _polygons.clear(); // Remove the old polygon
       _polygons.add(
         Polygon(
           polygonId: PolygonId('polygon_1'),
-          points: [..._markerCoordinates, _markerCoordinates.first], // Close the shape
-          fillColor: Colors.blue.withValues(alpha: .2), // Fill color with transparency
+          points: [
+            ..._markerCoordinates,
+            _markerCoordinates.first
+          ], // Close the shape
+          fillColor:
+              Colors.blue.withValues(alpha: .2), // Fill color with transparency
           strokeColor: Colors.blue,
           strokeWidth: 2,
         ),
@@ -83,33 +89,60 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          GestureDetector(
-            onTap: () {
-              debugPrint("I WAS TAPPED @ STACK");
+          GoogleMap(
+            initialCameraPosition: _initialCameraPosition!,
+            onMapCreated: (controller) {
+              _mapController = controller;
             },
-            child: GoogleMap(
-              initialCameraPosition: _initialCameraPosition!,
-              onMapCreated: (controller) {
-                _mapController = controller;
-              },
-              markers: _markers,
-              polygons: _polygons, 
-              onTap: _onMapTapped,
-              zoomGesturesEnabled: !_isMapFrozen,
-              scrollGesturesEnabled: !_isMapFrozen,
-              rotateGesturesEnabled: !_isMapFrozen,
-              tiltGesturesEnabled: !_isMapFrozen,
-              compassEnabled: false,
+            mapType: MapType.satellite,
+            markers: _markers,
+            polygons: _polygons,
+            onTap: _onMapTapped,
+            zoomGesturesEnabled: !_isMapFrozen,
+            scrollGesturesEnabled: !_isMapFrozen,
+            rotateGesturesEnabled: !_isMapFrozen,
+            tiltGesturesEnabled: !_isMapFrozen,
+            compassEnabled: false,
+          ),
+          Positioned(
+            top: 5,
+            left: 5,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isMapFrozen = !_isMapFrozen;
+                  });
+                },
+                icon: Icon(_isMapFrozen ? Icons.lock : Icons.lock_open),
+                tooltip: _isMapFrozen ? 'Unlock map' : 'Lock map',
+              ),
             ),
           ),
-          IconButton(
-            onPressed: () {
-              setState(() {
-                _isMapFrozen = !_isMapFrozen;
-              });
-            },
-            icon: Icon(_isMapFrozen ? Icons.lock : Icons.lock_open),
-            tooltip: _isMapFrozen ? 'Unlock map' : 'Lock map',
+          Positioned(
+            top: 5,
+            right: 5,
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  setState(() {
+                    _polygons.clear();
+                    _markers.clear();
+                    _markerCoordinates.clear();
+                  });
+                },
+                icon: Icon(Icons.delete),
+                tooltip: 'Clear map',
+              ),
+            ),
           ),
         ],
       ),
