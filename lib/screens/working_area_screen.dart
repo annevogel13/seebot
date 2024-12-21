@@ -73,12 +73,17 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
       await firestoreDB.addArea(title, description, status, markers);
       // Implement your save logic here
       if (mounted) {
+        final nbPoints = coordinates.length;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Area saved: $title with $coordinates.length points'),
+            content: Text('Area saved: $title with $nbPoints points'),
             duration: Duration(seconds: 2),
           ),
         );
+
+      _titleController.clear();
+      _descriptionController.clear();
+      coordinates.clear();
 
       Navigator.pushNamed(context, '/showArea');
 

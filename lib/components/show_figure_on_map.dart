@@ -24,7 +24,8 @@ class _PolygoneShowMapState extends State<PolygoneShowMap> {
     super.initState();
 
     //initialize points
-    final List<LatLng> points = widget.area.getCoordinates.map((e) => LatLng(e[0], e[1])).toList();
+    final List<LatLng> points =
+        widget.area.getCoordinates.map((e) => LatLng(e[0], e[1])).toList();
 
     //initialize polygon
     _polygon.add(Polygon(
@@ -42,7 +43,8 @@ class _PolygoneShowMapState extends State<PolygoneShowMap> {
     return SafeArea(
       child: GoogleMap(
         //given camera position
-        initialCameraPosition: CameraPosition(target: widget.area.centerCoordinates, zoom: widget.area.zoomLevel),
+        initialCameraPosition: CameraPosition(
+            target: widget.area.centerCoordinates, zoom: widget.area.zoomLevel),
         // on below line we have given map type
         mapType: MapType.satellite,
         // on below line we have enabled location

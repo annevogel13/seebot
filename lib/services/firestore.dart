@@ -4,7 +4,6 @@ import 'package:geoflutterfire2/geoflutterfire2.dart';
 import 'package:seebot/models/areas.dart';
 
 final geo = GeoFlutterFire();
-
 FirestoreService firestoreDB = FirestoreService();
 
 class FirestoreService {

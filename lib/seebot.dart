@@ -12,6 +12,7 @@ import 'package:seebot/functions/current_location.dart';
 //TODO LIST 
 // 1. What happens if a user doesn't gave location permission?
 
+
 class SeebotApp extends StatefulWidget {
 
   const SeebotApp({super.key});
