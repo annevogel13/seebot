@@ -6,14 +6,14 @@ class Area {
   late IconData icon;
 
   final int status;
-  final List<double> coordinates;
+  List<List<double>> coordinates = [];
 
   Area(
       {required this.title,
       this.description = '',
       required this.status,
       IconData? iconGiven,
-      this.coordinates = const []}) {
+      this.coordinates = const [[0.0, 0.0]]}) {
     if (iconGiven == null) {
       // active
       if (status == 0) {
@@ -28,6 +28,7 @@ class Area {
     } else {
       icon = iconGiven;
     }
+
   }
 
   ListTile getListView(BuildContext context) {

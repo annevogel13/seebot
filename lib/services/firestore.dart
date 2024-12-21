@@ -1,36 +1,57 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:geoflutterfire2/geoflutterfire2.dart';
- 
+import 'package:seebot/models/areas.dart';
+
 final geo = GeoFlutterFire();
 
 class FirestoreService {
-
-  // get areas 
-  final CollectionReference _areasCollection = FirebaseFirestore.instance.collection('areas');
+  // get areas
+  final CollectionReference _areasCollection =
+      FirebaseFirestore.instance.collection('areas');
 
   //create area
-  Future <void> addArea(title, description, status, coordinates){
-    // turn coordinates into a json string 
-    final markers = jsonEncode(coordinates); 
+  Future<void> addArea(title, description, status, coordinates) {
+    // turn coordinates into a json string
+    final markers = jsonEncode(coordinates);
 
-    return _areasCollection.add({'title': title, 'description' : description, 'status' : status, 'markers' : markers});
+    return _areasCollection.add({
+      'title': title,
+      'description': description,
+      'status': status,
+      'markers': markers
+    });
   }
 
-  // read 
-  Stream<QuerySnapshot> getAreaStream(){
-    final areaStream = _areasCollection.orderBy('name', descending: true).snapshots();
-    return areaStream; 
+  // read
+  Future<List<Area>> getAreas() async {
+    QuerySnapshot querySnapshot = await _areasCollection.get();
+    final documents = querySnapshot.docs
+        .map((doc) => doc.data() as Map<String, dynamic>)
+        .toList();
+
+    final List<Area> areas = [];
+    // changing the markers from json string to list of LatLng
+    for (var element in documents) {
+      final markers = jsonDecode(element['markers']);
+      final List<List<double>> markersList = List<List<double>>.from(
+        markers.map((marker) => List<double>.from(marker.map((coord) => coord.toDouble())))
+      );
+      final areaInstance = Area(title : element['title'], description:  element['description'],
+          status : element['status'], coordinates:  markersList);	 
+      areas.add(areaInstance); // add the area to the list
+    }
+    // return the list of documents
+    return areas;
   }
-  // update 
-  Future<void> updateArea(String docID, area){
+
+  // update
+  Future<void> updateArea(String docID, area) {
     return _areasCollection.doc(docID).update(area);
   }
 
-  // delete 
-  Future<void> deleteArea(String docID){
+  // delete
+  Future<void> deleteArea(String docID) {
     return _areasCollection.doc(docID).delete();
   }
 }
