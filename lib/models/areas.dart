@@ -3,6 +3,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 
 class Area {
+  final String id ; 
   final String title;
   final String description;
   late IconData icon;
@@ -11,7 +12,9 @@ class Area {
   List<List<double>> coordinates = [];
 
   Area(
-      {required this.title,
+      {
+        required this.id, 
+        required this.title,
       this.description = '',
       required this.status,
       IconData? iconGiven,

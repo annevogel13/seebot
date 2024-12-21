@@ -70,7 +70,7 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
           
       final markers = coordinates.map((e) => [e.latitude, e.longitude]);
       // save to firestore
-      await FirestoreService().addArea(title, description, status, markers);
+      await firestoreDB.addArea(title, description, status, markers);
       // Implement your save logic here
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

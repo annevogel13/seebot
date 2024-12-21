@@ -5,6 +5,8 @@ import 'package:seebot/models/areas.dart';
 
 final geo = GeoFlutterFire();
 
+FirestoreService firestoreDB = FirestoreService();
+
 class FirestoreService {
   // get areas
   final CollectionReference _areasCollection =
@@ -27,7 +29,12 @@ class FirestoreService {
   Future<List<Area>> getAreas() async {
     QuerySnapshot querySnapshot = await _areasCollection.get();
     final documents = querySnapshot.docs
-        .map((doc) => doc.data() as Map<String, dynamic>)
+        .map((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          data['id'] = doc.id;
+          return data;
+        })
+        
         .toList();
 
     final List<Area> areas = [];
@@ -37,7 +44,7 @@ class FirestoreService {
       final List<List<double>> markersList = List<List<double>>.from(
         markers.map((marker) => List<double>.from(marker.map((coord) => coord.toDouble())))
       );
-      final areaInstance = Area(title : element['title'], description:  element['description'],
+      final areaInstance = Area(id : element['id'], title : element['title'], description:  element['description'],
           status : element['status'], coordinates:  markersList);	 
       areas.add(areaInstance); // add the area to the list
     }
