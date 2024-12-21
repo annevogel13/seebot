@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+// components 
 import 'package:seebot/components/universal_appbar.dart';
 import 'package:seebot/components/universal_background.dart';
+// getting the location 
 import 'package:geolocator/geolocator.dart';
+// displaying the map (+ package)
 import 'package:seebot/components/google_maps.dart'; 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+// firestore
+import 'package:seebot/services/firestore.dart';
+
 
 class WorkingOnArea extends StatefulWidget {
   const WorkingOnArea({super.key, required this.currentLocation});
@@ -20,8 +26,9 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
   late CameraPosition initialCameraPosition;
 
   final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController =
-      TextEditingController(); // Controller for description
+  final TextEditingController _descriptionController = TextEditingController(); 
+  List<LatLng> coordinates = [];
+
   final FocusNode _titleFocusNode = FocusNode();
   final FocusNode _descriptionFocusNode = FocusNode();
   bool _isKeyboardVisible = false;
@@ -52,27 +59,40 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
     });
   }
 
-  void saveArea() {
+  void saveArea() async {
     final String title = _titleController.text;
     final String description = _descriptionController.text;
+    final status = 0 ; // active
+
 
     ScaffoldMessenger.of(context).clearSnackBars();
-    if (title != '') {
+    if (title != '' && coordinates.isNotEmpty) {
+          
+      final markers = coordinates.map((e) => [e.latitude, e.longitude]);
+      // save to firestore
+      await FirestoreService().addArea(title, description, status, markers);
       // Implement your save logic here
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Area saved: $title with $description'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-
-      // adding title / description
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Area saved: $title with $coordinates.length points'),
+            duration: Duration(seconds: 2),
+          ),
+        );
 
       Navigator.pushNamed(context, '/showArea');
+
+      }
+
+
     } else {
+      var message = ''; 
+      if(title == '') message = "Please enter a title";
+      if(coordinates.isEmpty) message = "Please give an area";
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please enter a title'),
+          content: Text(message),
           duration: Duration(seconds: 2),
         ),
       );
@@ -95,8 +115,8 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
       body: UniversalBackground(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              SizedBox(height: 20),
               Container(
                 width: 300, // Set the width to match the container below
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
@@ -130,6 +150,11 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
                   ),
                   child: MapScreen(
                     currentLocation: widget.currentLocation,
+                    onCoordinatesChanged: (coordinates){
+                      setState(() {
+                        this.coordinates = coordinates;
+                      });
+                    },
                   ),
                 ),
               SizedBox(height: 20),

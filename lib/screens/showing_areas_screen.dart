@@ -13,17 +13,22 @@ class ShowArea extends StatelessWidget {
     final List<Area> areas = [
       Area(
         title: 'Area 1',
-        description: 'Description of Area 1',
-        latitude: 37.7749,
-        longitude: -122.4194,
+        description: 'This is the first area',
+        status: 0,
+        coordinates: [37.42796133580664, -122.085749655962],
       ),
       Area(
         title: 'Area 2',
-        description: 'Description of Area 2',
-        latitude: 34.0522,
-        longitude: -118.2437,
+        description: 'This is the second area',
+        status: 1,
+        coordinates: [37.42796133580664, -122.085749655962],
       ),
-      // Add more Area objects as needed
+      Area(
+        title: 'Area 3',
+        description: 'This is the third area',
+        status: 2,
+        coordinates: [37.42796133580664, -122.085749655962],
+      ),
     ];
 
     return Scaffold(

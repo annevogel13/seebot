@@ -3,9 +3,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key, required this.currentLocation});
+  const MapScreen({super.key, required this.currentLocation, required this.onCoordinatesChanged});
 
   final Position currentLocation;
+  final Function(List<LatLng>) onCoordinatesChanged;
 
   @override
   State<MapScreen> createState() {
@@ -47,7 +48,6 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   void _onMapTapped(LatLng position) {
-    debugPrint('I WAS TAPPED @MAP $position.toString()');
     if (_isMapFrozen) {
       setState(() {
         _markers.add(
@@ -60,6 +60,7 @@ class _MapScreenState extends State<MapScreen> {
       });
 
       _markerCoordinates.add(position);
+      widget.onCoordinatesChanged(_markerCoordinates);
       _updatePolygon();
     }
   }
