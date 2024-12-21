@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:seebot/components/universal_appbar.dart';
 import 'package:seebot/components/universal_background.dart';
+
 import 'package:seebot/models/areas.dart'; // Import the Area model
-import 'package:seebot/components/show_figure_on_map.dart'; // Import the PolygoneShowMap component
 import 'package:seebot/services/firestore.dart';
+import 'package:seebot/components/single_area_dialog.dart'; // Import the AreaDialog component
 
 class ShowArea extends StatelessWidget {
   const ShowArea({super.key});
@@ -31,6 +32,7 @@ class ShowArea extends StatelessWidget {
             return UniversalBackground(
               child: ListView.builder(
                 itemCount: areas.length,
+                // onDismissed: (direction) => removeExpense(expenses[index]),
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Row(
@@ -55,58 +57,7 @@ class ShowArea extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: Row(
-                              children: [
-                                Icon(areas[index].icon),
-                                SizedBox(width: 12),
-                                Expanded(
-                                  child: Text(
-                                    areas[index].title,
-                                    softWrap: true,
-                                    textAlign: TextAlign.left,
-                                        style: TextStyle(color: Colors.black, fontSize: 18),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            content: SingleChildScrollView(
-                              child: ListBody(
-                                children: [
-                                  Text(
-                                    areas[index].description[0].toUpperCase() + areas[index].description.substring(1),
-                                    textAlign: TextAlign.left,
-                                        style: TextStyle(color: Colors.black),
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    'The number of points in the area is : ${areas[index].getCoordinates.length}',
-                                    textAlign: TextAlign.left,
-                                    style: TextStyle(color: Colors.black, fontSize: 16),
-                                  ),
-                                  SizedBox(height: 10),
-                                  SizedBox(
-                                    height: 200,
-                                    child: PolygoneShowMap(
-                                      area: areas[index],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            actions: [
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  backgroundColor: Theme.of(context).primaryColor, // Background color
-                                  side: BorderSide(color: Theme.of(context).primaryColor, width: 1), // Border color and width
-                                ),
-                                child: Text('Close', style: TextStyle(color: Colors.white)),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
+                          return AreaDialog(area: areas[index]);
                         },
                       );
                     },
