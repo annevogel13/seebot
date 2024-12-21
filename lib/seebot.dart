@@ -25,7 +25,7 @@ class SeebotApp extends StatefulWidget {
 
 class _SeebotAppState extends State<SeebotApp> {
 
-  late Position currentLocation;
+  late Position currentLocation ; 
 
   @override
   void initState() {

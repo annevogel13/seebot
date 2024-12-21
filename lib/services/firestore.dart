@@ -13,7 +13,7 @@ class FirestoreService {
   //create area
   Future<void> addArea(title, description, status, coordinates) {
     // turn coordinates into a json string
-    final markers = jsonEncode(coordinates);
+    final markers = jsonEncode(coordinates.toList());
 
     return _areasCollection.add({
       'title': title,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 class Area {
   final String title;
@@ -13,7 +15,9 @@ class Area {
       this.description = '',
       required this.status,
       IconData? iconGiven,
-      this.coordinates = const [[0.0, 0.0]]}) {
+      this.coordinates = const [
+        [0.0, 0.0]
+      ]}) {
     if (iconGiven == null) {
       // active
       if (status == 0) {
@@ -28,7 +32,33 @@ class Area {
     } else {
       icon = iconGiven;
     }
+  }
 
+  List<List<double>> get getCoordinates {
+    return coordinates;
+  }
+
+  LatLng get centerCoordinates {
+    double totalLat = 0.0;
+    double totalLng = 0.0;
+
+    for (var coordinate in coordinates) {
+      totalLat += coordinate[0];
+      totalLng += coordinate[1];
+    }
+
+    double centerLat = totalLat / coordinates.length;
+    double centerLng = totalLng / coordinates.length;
+
+    return LatLng(centerLat, centerLng);
+  }
+
+  double get zoomLevel {
+    if (coordinates.isEmpty) {
+      return 0;
+    }
+
+    return 18; 
   }
 
   ListTile getListView(BuildContext context) {

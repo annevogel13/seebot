@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:seebot/models/areas.dart';
 
 class PolygoneShowMap extends StatefulWidget {
-  const PolygoneShowMap({super.key});
+  const PolygoneShowMap({super.key, required this.area});
+
+  final Area area;
 
   @override
   State<PolygoneShowMap> createState() => _PolygoneShowMapState();
@@ -14,25 +17,15 @@ class _PolygoneShowMapState extends State<PolygoneShowMap> {
   // created controller to display Google Maps
   final Completer<GoogleMapController> _controller = Completer();
 
-  // on below line we have set the camera position
-  static final CameraPosition _kGoogle = const CameraPosition(
-    target: LatLng(19.0759837, 72.8776559),
-    zoom: 14,
-  );
-
   final Set<Polygon> _polygon = HashSet<Polygon>();
-
-// created list of locations to display polygon
-  List<LatLng> points = [
-    LatLng(19.0759837, 72.8776559),
-    LatLng(28.679079, 77.069710),
-    LatLng(26.850000, 80.949997),
-    LatLng(19.0759837, 72.8776559),
-  ];
 
   @override
   void initState() {
     super.initState();
+
+    //initialize points
+    final List<LatLng> points = widget.area.getCoordinates.map((e) => LatLng(e[0], e[1])).toList();
+
     //initialize polygon
     _polygon.add(Polygon(
       polygonId: PolygonId('1'),
@@ -49,12 +42,12 @@ class _PolygoneShowMapState extends State<PolygoneShowMap> {
     return SafeArea(
       child: GoogleMap(
         //given camera position
-        initialCameraPosition: _kGoogle,
+        initialCameraPosition: CameraPosition(target: widget.area.centerCoordinates, zoom: widget.area.zoomLevel),
         // on below line we have given map type
-        mapType: MapType.normal,
+        mapType: MapType.satellite,
         // on below line we have enabled location
-        myLocationEnabled: true,
-        myLocationButtonEnabled: true,
+        myLocationEnabled: false,
+        myLocationButtonEnabled: false,
         // on below line we have enabled compass location
         compassEnabled: true,
         // on below line we have added polygon

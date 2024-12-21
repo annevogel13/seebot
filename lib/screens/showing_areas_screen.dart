@@ -6,15 +6,12 @@ import 'package:seebot/components/show_figure_on_map.dart'; // Import the Polygo
 import 'package:seebot/services/firestore.dart';
 
 class ShowArea extends StatelessWidget {
-
   const ShowArea({super.key});
-
 
   Future<List<Area>> getAreas() async {
     // Implement your logic to fetch areas here
     return await FirestoreService().getAreas();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,37 +35,77 @@ class ShowArea extends StatelessWidget {
                   return ListTile(
                     title: Row(
                       children: [
-                      Icon(areas[index].icon), // Assuming 'icon' is a property in the Area model
-                      SizedBox(width: 8),
-                      Text(areas[index].title),
+                        Icon(areas[index]
+                            .icon), // Assuming 'icon' is a property in the Area model
+                        SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            areas[index].title,
+                            softWrap: true,
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
                       ],
                     ),
-                    subtitle: Text(areas[index].description),
+                    subtitle: Text(
+                      areas[index].description,
+                      textAlign: TextAlign.left,
+                    ),
                     onTap: () {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text(areas[index].title),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
+                            title: Row(
                               children: [
-                                Text(areas[index].description),
-                                SizedBox(height: 10),
-                                SizedBox(
-                                  height: 200,
-                                  child: PolygoneShowMap(),
+                                Icon(areas[index].icon),
+                                SizedBox(width: 12),
+                                Expanded(
+                                  child: Text(
+                                    areas[index].title,
+                                    softWrap: true,
+                                    textAlign: TextAlign.left,
+                                        style: TextStyle(color: Colors.black, fontSize: 18),
+                                  ),
                                 ),
                               ],
                             ),
+                            content: SingleChildScrollView(
+                              child: ListBody(
+                                children: [
+                                  Text(
+                                    areas[index].description[0].toUpperCase() + areas[index].description.substring(1),
+                                    textAlign: TextAlign.left,
+                                        style: TextStyle(color: Colors.black),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    'The number of points in the area is : ${areas[index].getCoordinates.length}',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(color: Colors.black, fontSize: 16),
+                                  ),
+                                  SizedBox(height: 10),
+                                  SizedBox(
+                                    height: 200,
+                                    child: PolygoneShowMap(
+                                      area: areas[index],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             actions: [
                               TextButton(
-                                child: Text('Close'),
+                                style: TextButton.styleFrom(
+                                  backgroundColor: Theme.of(context).primaryColor, // Background color
+                                  side: BorderSide(color: Theme.of(context).primaryColor, width: 1), // Border color and width
+                                ),
+                                child: Text('Close', style: TextStyle(color: Colors.white)),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                               ),
-                            ]
+                            ],
                           );
                         },
                       );
