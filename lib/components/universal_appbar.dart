@@ -20,6 +20,7 @@ class _UniversalAppBarState extends State<UniversalAppBar> {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(widget.title),
+      automaticallyImplyLeading: !(widget.title == 'Dashboard'),
       actions: [
         Container(
           margin: const EdgeInsets.symmetric(horizontal: 8.0),

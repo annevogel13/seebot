@@ -16,7 +16,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const UniversalAppBar(title: 'Dashboard'),
+      appBar: const UniversalAppBar(title: 'Dashboard', ),
       body: UniversalBackground(
         child: Stack(children: [
           Column(

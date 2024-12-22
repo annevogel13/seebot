@@ -12,7 +12,7 @@ class DashboardTile extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-          height: 280,
+          height: 260,
           decoration: BoxDecoration(
               color: color, borderRadius: BorderRadius.circular(20)),
           child: Center(child: child),

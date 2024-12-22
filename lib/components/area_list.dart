@@ -4,10 +4,11 @@ import 'package:seebot/components/universal_background.dart';
 import 'package:seebot/components/single_area_dialog.dart';
 
 class AreaList extends StatelessWidget {
-  const AreaList({super.key, required this.areas, required this.removeArea});
+  const AreaList({super.key, required this.areas, required this.removeArea, required this.modifyArea});
 
   final List<Area> areas;
   final Function removeArea;
+  final Function modifyArea;
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +28,7 @@ class AreaList extends StatelessWidget {
           child: ListTile(
             title: Row(
               children: [
-                Icon(areas[index]
-                    .icon), // Assuming 'icon' is a property in the Area model
+                Icon(areas[index].icon),
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -43,6 +43,10 @@ class AreaList extends StatelessWidget {
             subtitle: Text(
               areas[index].description,
               textAlign: TextAlign.left,
+            ),
+            trailing: IconButton(
+              onPressed: () => modifyArea(index),
+              icon: Icon(Icons.edit),
             ),
             onTap: () {
               showDialog(

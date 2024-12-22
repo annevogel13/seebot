@@ -27,24 +27,37 @@ class FirestoreService {
   // read
   Future<List<Area>> getAreas() async {
     QuerySnapshot querySnapshot = await _areasCollection.get();
-    final documents = querySnapshot.docs
-        .map((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          data['id'] = doc.id;
-          return data;
-        })
-        
-        .toList();
+    final documents = querySnapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      data['id'] = doc.id;
+      return data;
+    }).toList();
 
     final List<Area> areas = [];
     // changing the markers from json string to list of LatLng
     for (var element in documents) {
-      final markers = jsonDecode(element['markers']);
-      final List<List<double>> markersList = List<List<double>>.from(
-        markers.map((marker) => List<double>.from(marker.map((coord) => coord.toDouble())))
-      );
-      final areaInstance = Area(id : element['id'], title : element['title'], description:  element['description'],
-          status : element['status'], coordinates:  markersList);	 
+      final List<List<double>> markersList = [];
+
+      if (element['markers'].runtimeType == String) {
+        // if the markers are in json string format
+        final markers = jsonDecode(element['markers']);
+        for (var marker in markers) {
+          markersList.add([marker[0], marker[1]]);
+        }
+      } else {
+        // if the markers are in list of LatLng format
+        for (var marker in element['markers']) {
+          final geoPoint = marker['geopoint'];
+          markersList.add([geoPoint.latitude, geoPoint.longitude]);
+        }
+      }
+
+      final areaInstance = Area(
+          id: element['id'],
+          title: element['title'],
+          description: element['description'],
+          status: element['status'],
+          coordinates: markersList);
       areas.add(areaInstance); // add the area to the list
     }
     // return the list of documents

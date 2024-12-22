@@ -3,6 +3,7 @@ import 'package:seebot/components/universal_appbar.dart';
 import 'package:seebot/models/areas.dart'; // Import the Area model
 import 'package:seebot/services/firestore.dart';
 import 'package:seebot/components/area_list.dart'; // Import the AreaList component
+import 'package:seebot/components/modify_area.dart'; // Import the ModifyArea component
 
 class ShowArea extends StatefulWidget {
   const ShowArea({super.key});
@@ -42,6 +43,17 @@ class _ShowAreaState extends State<ShowArea> {
     );
   }
 
+  void modifyArea(index) {
+    // Implement your logic to modify the area here
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ModifyArea(area: areas[index]),
+      ),
+    );
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +72,7 @@ class _ShowAreaState extends State<ShowArea> {
             return AreaList(
               areas: areas,
               removeArea: removeArea,
+              modifyArea: modifyArea,
             );
           }
         },
