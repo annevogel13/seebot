@@ -16,7 +16,9 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const UniversalAppBar(title: 'Dashboard', ),
+      appBar: const UniversalAppBar(
+        title: 'Dashboard',
+      ),
       body: UniversalBackground(
         child: Stack(children: [
           Column(
@@ -24,13 +26,27 @@ class _DashboardState extends State<Dashboard> {
               SizedBox(height: 20),
               Row(
                 children: [
-                  DashboardTile(color: Theme.of(context).colorScheme.primary, child: Text('Box 1')),
-                  DashboardTile(color: Theme.of(context).colorScheme.secondary, child: Text('Box 2')),
+                  DashboardTile(
+                    color: Theme.of(context).colorScheme.primary,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/steering'); 
+                      },
+                      child: Text('box 1'),
+                    ),
+                  ),
+                  DashboardTile(
+                      color: Theme.of(context).colorScheme.secondary,
+                      child: Text('Box 2')),
                 ],
               ),
               Row(children: [
-                DashboardTile(color: Theme.of(context).colorScheme.error, child: Text('Box 3')),
-                DashboardTile(color: Theme.of(context).colorScheme.tertiary, child: Text('Box 4')),
+                DashboardTile(
+                    color: Theme.of(context).colorScheme.error,
+                    child: Text('Box 3')),
+                DashboardTile(
+                    color: Theme.of(context).colorScheme.tertiary,
+                    child: Text('Box 4')),
               ]),
             ],
           ),

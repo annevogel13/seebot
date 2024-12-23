@@ -1,10 +1,13 @@
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:seebot/screens/login_screen.dart';
 import 'package:seebot/screens/dashboard_screen.dart';
 import 'package:seebot/screens/showing_areas_screen.dart';
 import 'package:seebot/screens/working_area_screen.dart';
 import 'package:seebot/screens/support_screen.dart';
+import 'package:seebot/screens/steering_screen.dart';
+
 
 import 'package:geolocator/geolocator.dart';
 import 'package:seebot/functions/current_location.dart';
@@ -68,6 +71,7 @@ class _SeebotAppState extends State<SeebotApp> {
         '/showArea': (BuildContext context) => const ShowArea(),
         '/createArea': (BuildContext context) => WorkingOnArea(currentLocation: currentLocation,),
         '/support': (BuildContext context) => const SupportScreen(),
+        '/steering' : (BuildContext context) => SteeringScreen(startingPosition : LatLng(currentLocation.latitude, currentLocation.longitude)),
       },
     );
   }
