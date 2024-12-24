@@ -4,7 +4,6 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'dart:async';
 
 class SteeringScreen extends StatefulWidget {
-
   const SteeringScreen({super.key, required this.startingPosition});
 
   final LatLng startingPosition;
@@ -17,12 +16,18 @@ class _SteeringScreenState extends State<SteeringScreen> {
   Timer? _movementTimer;
   String _direction = "Waiting for input...";
   late LatLng _squarePosition; // Initial position of the square
+  GoogleMapController? _mapController; // Controller for Google Map
+  bool isMowing = false ; 
 
   @override
   void initState() {
     super.initState();
     _squarePosition = widget.startingPosition;
     _startGyroscopeListener();
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
   }
 
   void _startGyroscopeListener() {
@@ -32,12 +37,6 @@ class _SteeringScreenState extends State<SteeringScreen> {
           _setDirection("Forward Right", 0.0001, 0.0001);
         } else if (event.x < -0.5 && event.y < -0.5) {
           _setDirection("Forward Left", 0.0001, -0.0001);
-        } else if (event.x > 0.5 && event.y > 0.5) {
-          _setDirection("Backward Right", -0.0001, 0.0001);
-        } else if (event.x > 0.5 && event.y < -0.5) {
-          _setDirection("Backward Left", -0.0001, -0.0001);
-        } else if (event.x < -0.5) {
-          _setDirection("Forward", 0.0001, 0);
         } else if (event.x > 0.5) {
           _setDirection("Backward", -0.0001, 0);
         } else if (event.y > 0.5) {
@@ -67,6 +66,9 @@ class _SteeringScreenState extends State<SteeringScreen> {
         _squarePosition.latitude + latChange,
         _squarePosition.longitude + lngChange,
       );
+      _mapController?.animateCamera(
+        CameraUpdate.newLatLng(_squarePosition),
+      );
     });
   }
 
@@ -86,6 +88,7 @@ class _SteeringScreenState extends State<SteeringScreen> {
       body: Stack(
         children: [
           GoogleMap(
+            onMapCreated: _onMapCreated,
             initialCameraPosition: CameraPosition(
               target: _squarePosition,
               zoom: 15,
@@ -94,27 +97,47 @@ class _SteeringScreenState extends State<SteeringScreen> {
               Marker(
                 markerId: MarkerId("square"),
                 position: _squarePosition,
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+                icon: (isMowing)? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen): BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
               ),
             },
           ),
           Positioned(
-            top: 16,
-            left: 16,
+            top: 5,
+            left: 5,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "Direction:",
-                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
-                SizedBox(height: 16),
                 Text(
                   _direction,
-                  style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold, color: Colors.blue),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue),
                 ),
               ],
             ),
           ),
+          Positioned(
+              left: 5,
+              bottom: 5,
+              child: ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    // change the color of the marker 
+                    isMowing = true; 
+                  });
+                },
+                child: Icon(
+                  Icons.grass_rounded,
+                  size: 30,
+                ),
+              ))
         ],
       ),
     );
