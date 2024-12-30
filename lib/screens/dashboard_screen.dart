@@ -3,6 +3,9 @@ import 'package:seebot/components/universal_appbar.dart';
 import 'package:seebot/components/universal_background.dart';
 import 'package:seebot/components/dashboard_tile.dart';
 
+import 'package:seebot/components/graph_slider.dart';
+import 'package:seebot/services/firestore.dart';
+
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
@@ -13,6 +16,14 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  late Future<List<List<dynamic>>> data;
+
+  @override
+  void initState() {
+    super.initState();
+    data = firestoreDB.getGraphData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,22 +35,25 @@ class _DashboardState extends State<Dashboard> {
           Column(
             children: [
               SizedBox(height: 20),
-              Row(
-                children: [
-                  DashboardTile(
-                    color: Theme.of(context).colorScheme.primary,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/steering'); 
-                      },
-                      child: Text('box 1'),
-                    ),
+              Row(children: [
+                DashboardTile(
+                  color: Theme.of(context).colorScheme.secondary,
+                  child: FutureBuilder<List<List<dynamic>>>(
+                    future: data,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                        return Text('No data available');
+                      } else {
+                        return GraphSlider(data: snapshot.data!);
+                      }
+                    },
                   ),
-                  DashboardTile(
-                      color: Theme.of(context).colorScheme.secondary,
-                      child: Text('Box 2')),
-                ],
-              ),
+                ),
+              ]),
               Row(children: [
                 DashboardTile(
                     color: Theme.of(context).colorScheme.error,
@@ -70,6 +84,12 @@ class _DashboardState extends State<Dashboard> {
                       Navigator.pushNamed(context, '/createArea');
                     },
                     child: const Text('Create area'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/steering');
+                    },
+                    child: Text('Steering'),
                   ),
                 ],
               ),

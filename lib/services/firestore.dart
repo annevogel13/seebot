@@ -11,6 +11,10 @@ class FirestoreService {
   final CollectionReference _areasCollection =
       FirebaseFirestore.instance.collection('areas');
 
+final CollectionReference _sessionCollection =
+      FirebaseFirestore.instance.collection('session');
+  
+
   //create area
   Future<void> addArea(title, description, status, coordinates) {
     // turn coordinates into a json string
@@ -72,5 +76,28 @@ class FirestoreService {
   // delete
   Future<void> deleteArea(String docID) {
     return _areasCollection.doc(docID).delete();
+  }
+
+  // get graph data
+  Future<List<List<dynamic>>> getGraphData() async {
+    QuerySnapshot querySnapshot = await _sessionCollection.get();
+    final documents = querySnapshot.docs.map((doc) {
+      final data = doc.data() as Map<String, dynamic>;
+      data['id'] = doc.id;
+      return data;
+    }).toList();
+
+    final List<List<dynamic>> graphData = [];
+    for (var element in documents) {
+      
+      var points = [];      
+      
+      for(var d in element['datapoints']){
+        points.add([d['Latitude'], d['Longitude']]);
+      }
+      
+      graphData.add([element['id'], points]);
+    }
+    return graphData;
   }
 }
