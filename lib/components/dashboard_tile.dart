@@ -9,15 +9,15 @@ class DashboardTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: 260,
+      child:  Container(
+        margin: EdgeInsets.all(10),
+        padding: EdgeInsets.all(10),
+          height: 280,
           decoration: BoxDecoration(
               color: color, borderRadius: BorderRadius.circular(20)),
           child: Center(child: child),
         ),
-      ),
+      
     );
   }
 }

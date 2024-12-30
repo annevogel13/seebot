@@ -5,6 +5,7 @@ import 'package:seebot/components/dashboard_tile.dart';
 
 import 'package:seebot/components/graph_slider.dart';
 import 'package:seebot/services/firestore.dart';
+import 'package:seebot/graphs/piechart_graph.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
@@ -17,11 +18,13 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   late Future<List<List<dynamic>>> data;
+  late Future<Map<CategorySeebot, int>> piechartData;
 
   @override
   void initState() {
     super.initState();
     data = firestoreDB.getGraphData();
+    piechartData = firestoreDB.getPieChartData();
   }
 
   @override
@@ -34,7 +37,6 @@ class _DashboardState extends State<Dashboard> {
         child: Stack(children: [
           Column(
             children: [
-              SizedBox(height: 20),
               Row(children: [
                 DashboardTile(
                   color: Theme.of(context).colorScheme.secondary,
@@ -56,45 +58,51 @@ class _DashboardState extends State<Dashboard> {
               ]),
               Row(children: [
                 DashboardTile(
-                    color: Theme.of(context).colorScheme.error,
-                    child: Text('Box 3')),
+                    color: Theme.of(context).colorScheme.secondary,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/showArea');
+                          },
+                          child: const Text('Go to area'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/createArea');
+                          },
+                          child: const Text('Create area'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/steering');
+                          },
+                          child: Text('Steering'),
+                        ),
+                      ],
+                    )),
                 DashboardTile(
-                    color: Theme.of(context).colorScheme.tertiary,
-                    child: Text('Box 4')),
+                  color: Theme.of(context).colorScheme.tertiary,
+                  child: FutureBuilder<Map<CategorySeebot, int>>(
+                      future: piechartData,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        } else if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return Text('No data available');
+                        } else {
+                          return PieChartGraph(data : snapshot.data!);
+                        }
+                      }),
+                ),
               ]),
             ],
           ),
-          Positioned(
-            bottom: 0,
-            left: 0,
-            width: MediaQuery.of(context).size.width,
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/showArea');
-                    },
-                    child: const Text('Go to area'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/createArea');
-                    },
-                    child: const Text('Create area'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/steering');
-                    },
-                    child: Text('Steering'),
-                  ),
-                ],
-              ),
-            ),
-          )
         ]),
       ),
     );

@@ -9,7 +9,7 @@ class ScatterGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 180,
+      height: 190,
       width: 340,
       child: Center(
         child: ScatterChart(
@@ -52,7 +52,6 @@ class ScatterGraph extends StatelessWidget {
               ),
               bottomTitles: AxisTitles(
                 axisNameWidget: Text('Longitude'),
-                
                 sideTitles: SideTitles(
                   showTitles: true,
                   getTitlesWidget: (value, meta) {
