@@ -13,8 +13,14 @@ class SupportScreen extends StatelessWidget {
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text('Support Screen'),
+              Text(
+                'Since there is no documentation written yet for the seebot, it made no sense to implement the chatbot',
+                softWrap: true,
+                textAlign: TextAlign.center,
+              ),
             ],
           ),
         ),

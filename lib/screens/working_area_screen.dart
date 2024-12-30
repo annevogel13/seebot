@@ -164,7 +164,7 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
                 ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: (_isKeyboardVisible) ? null : saveArea,
+                onPressed: (_isKeyboardVisible && _titleController.text == '' ) ? null : saveArea,
                 child: (_isKeyboardVisible)? const Text('Choose coordinates') : const Text('Save Area')  ,
               ),
             ],

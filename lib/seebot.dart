@@ -8,12 +8,8 @@ import 'package:seebot/screens/working_area_screen.dart';
 import 'package:seebot/screens/support_screen.dart';
 import 'package:seebot/screens/steering_screen.dart';
 
-
 import 'package:geolocator/geolocator.dart';
 import 'package:seebot/functions/current_location.dart';
-
-//TODO 1. What happens if a user doesn't gave location permission?
-//TODO 2. create user authentification + account 
 
 class SeebotApp extends StatefulWidget {
 
