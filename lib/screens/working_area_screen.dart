@@ -84,7 +84,7 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
       _titleController.clear();
       _descriptionController.clear();
       coordinates.clear();
-
+      Navigator.pushNamed(context, '/dashboard');
       Navigator.pushNamed(context, '/showArea');
 
       }
@@ -164,8 +164,8 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
                 ),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: saveArea,
-                child: const Text('Save Area'),
+                onPressed: (_isKeyboardVisible) ? null : saveArea,
+                child: (_isKeyboardVisible)? const Text('Choose coordinates') : const Text('Save Area')  ,
               ),
             ],
           ),
