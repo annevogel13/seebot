@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:seebot/components/universal_appbar.dart';
+import 'package:seebot/components/universal/universal_appbar.dart';
 import 'package:seebot/models/areas.dart'; // Import the Area model
 import 'package:seebot/services/firestore.dart';
-import 'package:seebot/components/area_list.dart'; // Import the AreaList component
+import 'package:seebot/components/listingAreas/area_list.dart'; // Import the AreaList component
 import 'package:seebot/components/modify_area.dart'; // Import the ModifyArea component
 
 class ShowArea extends StatefulWidget {

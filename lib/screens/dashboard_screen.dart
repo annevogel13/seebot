@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:seebot/components/universal_appbar.dart';
-import 'package:seebot/components/universal_background.dart';
-import 'package:seebot/components/dashboard_tile.dart';
+import 'package:seebot/components/universal/universal_appbar.dart';
+import 'package:seebot/components/universal/universal_background.dart';
+import 'package:seebot/components/dashboard/dashboard_tile.dart';
 
-import 'package:seebot/components/graph_slider.dart';
+import 'package:seebot/components/dashboard/graph_slider.dart';
 import 'package:seebot/services/firestore.dart';
 import 'package:seebot/graphs/piechart_graph.dart';
 

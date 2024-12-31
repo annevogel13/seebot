@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seebot/components/universal_background.dart';
+import 'package:seebot/components/universal/universal_background.dart';
 
 class UniversalAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;

@@ -5,7 +5,7 @@ import 'package:seebot/components/google_maps.dart';
 import 'package:seebot/services/firestore.dart';
 import 'package:seebot/models/areas.dart';
 import 'dart:convert';
-import 'package:seebot/components/universal_background.dart';
+import 'package:seebot/components/universal/universal_background.dart';
 
 class ModifyArea extends StatefulWidget {
   const ModifyArea({super.key, required this.area});

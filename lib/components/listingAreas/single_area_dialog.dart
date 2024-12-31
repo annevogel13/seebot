@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:seebot/models/areas.dart';
-import 'package:seebot/components/show_figure_on_map.dart'; // Import the PolygoneShowMap component
+import 'package:seebot/components/listingAreas/show_figure_on_map.dart'; // Import the PolygoneShowMap component
 
 class AreaDialog extends StatelessWidget {
   const AreaDialog({super.key, required this.area});

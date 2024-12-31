@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:seebot/models/areas.dart';
-import 'package:seebot/components/universal_background.dart';
-import 'package:seebot/components/single_area_dialog.dart';
+import 'package:seebot/components/universal/universal_background.dart';
+import 'package:seebot/components/listingAreas/single_area_dialog.dart';
 
 class AreaList extends StatelessWidget {
   const AreaList({super.key, required this.areas, required this.removeArea, required this.modifyArea});

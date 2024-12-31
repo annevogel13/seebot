@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:seebot/components/universal_appbar.dart';
-import 'package:seebot/components/universal_background.dart';
+import 'package:seebot/components/universal/universal_appbar.dart';
+import 'package:seebot/components/universal/universal_background.dart';
 
 class SupportScreen extends StatelessWidget {
   const SupportScreen({super.key});

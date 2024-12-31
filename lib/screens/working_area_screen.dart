@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 // components 
-import 'package:seebot/components/universal_appbar.dart';
-import 'package:seebot/components/universal_background.dart';
+import 'package:seebot/components/universal/universal_appbar.dart';
+import 'package:seebot/components/universal/universal_background.dart';
 // getting the location 
 import 'package:geolocator/geolocator.dart';
 // displaying the map (+ package)

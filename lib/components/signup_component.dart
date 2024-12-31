@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:seebot/components/universal_background.dart';
+import 'package:seebot/components/universal/universal_background.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key, required this.email, required this.password});
