@@ -64,15 +64,15 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, '/showArea');
-                          },
-                          child: const Text('Go to area'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
                             Navigator.pushNamed(context, '/createArea');
                           },
                           child: const Text('Create area'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.pushNamed(context, '/showArea');
+                          },
+                          child: const Text('Go to area'),
                         ),
                         ElevatedButton(
                           onPressed: () {
@@ -96,7 +96,7 @@ class _DashboardState extends State<Dashboard> {
                             snapshot.data!.isEmpty) {
                           return Text('No data available');
                         } else {
-                          return PieChartGraph(data : snapshot.data!);
+                          return PieChartGraph(data: snapshot.data!);
                         }
                       }),
                 ),

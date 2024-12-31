@@ -17,7 +17,7 @@ class _SteeringScreenState extends State<SteeringScreen> {
   String _direction = "Waiting for input...";
   late LatLng _squarePosition; // Initial position of the square
   GoogleMapController? _mapController; // Controller for Google Map
-  bool isMowing = false ; 
+  bool isMowing = false;
 
   @override
   void initState() {
@@ -89,6 +89,8 @@ class _SteeringScreenState extends State<SteeringScreen> {
         children: [
           GoogleMap(
             onMapCreated: _onMapCreated,
+            mapToolbarEnabled  : false, 
+            mapType: MapType.satellite,
             initialCameraPosition: CameraPosition(
               target: _squarePosition,
               zoom: 15,
@@ -97,7 +99,11 @@ class _SteeringScreenState extends State<SteeringScreen> {
               Marker(
                 markerId: MarkerId("square"),
                 position: _squarePosition,
-                icon: (isMowing)? BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueGreen): BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+                icon: (isMowing)
+                    ? BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueGreen)
+                    : BitmapDescriptor.defaultMarkerWithHue(
+                        BitmapDescriptor.hueAzure),
               ),
             },
           ),
@@ -129,12 +135,16 @@ class _SteeringScreenState extends State<SteeringScreen> {
               child: ElevatedButton(
                 onPressed: () {
                   setState(() {
-                    // change the color of the marker 
-                    isMowing = true; 
+                    // change the color of the marker
+                    isMowing = !isMowing;
                   });
                 },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: (!isMowing)? const Color.fromRGBO(53, 234, 53, 1): const Color.fromRGBO(53, 144, 234, 1)// Change this to your desired color
+                ),
                 child: Icon(
                   Icons.grass_rounded,
+                  color : Colors.white,
                   size: 30,
                 ),
               ))

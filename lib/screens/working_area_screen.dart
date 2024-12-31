@@ -59,6 +59,38 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
     });
   }
 
+  
+  void _showExplanationDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('How to Draw a Figure on Google Maps'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('0.  Give in a title.'),
+                Text('1. Zoom to the desired area.'),
+                Text('2. Lock the map with the lock button in the left corner of the map.'),
+                Text('3. Tap to create a figure.'),
+                Text('4. To remove the entire figure, click on the trash can.'),
+                Text('5. Save the area by clicking on the button.'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Got it'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void saveArea() async {
     final String title = _titleController.text;
     final String description = _descriptionController.text;
@@ -146,7 +178,7 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
                   ),
                 ),
               ),
-              if (!_isKeyboardVisible)
+              if (!_isKeyboardVisible && _titleController.text.isNotEmpty && _descriptionController.text.isNotEmpty)
                 Container(
                   height: 300,
                   width: 300,
@@ -161,12 +193,16 @@ class _WorkingOnAreaState extends State<WorkingOnArea> {
                       });
                     },
                   ),
-                ),
+                )
+              else Text('Please enter a title and a description'),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: (_isKeyboardVisible && _titleController.text == '' ) ? null : saveArea,
                 child: (_isKeyboardVisible)? const Text('Choose coordinates') : const Text('Save Area')  ,
               ),
+              ElevatedButton(
+                  onPressed: _showExplanationDialog,
+                  child: Text('Help'),), 
             ],
           ),
         ),
