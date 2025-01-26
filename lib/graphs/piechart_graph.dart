@@ -51,7 +51,12 @@ class PieChartGraph extends StatelessWidget {
                     color: entry.value,
                   ),
                   SizedBox(width: 4),
-                  Text(entry.key.toString().split('.').last[0].toUpperCase() + entry.key.toString().split('.').last.substring(1)),
+                    Flexible(
+                    child: Text(
+                      entry.key.toString().split('.').last[0].toUpperCase() + entry.key.toString().split('.').last.substring(1),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    ),
                 ],
               );
             }).toList(),
