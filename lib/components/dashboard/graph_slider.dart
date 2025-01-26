@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:seebot/graphs/scatter_graph.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:seebot/graphs/scatter_map.dart';
+import 'package:seebot/services/firestore.dart';
+import 'package:seebot/models/areas.dart';
 
 class GraphSlider extends StatefulWidget {
   final List<List<dynamic>> data;
@@ -12,6 +15,20 @@ class GraphSlider extends StatefulWidget {
 
 class _GraphSliderState extends State<GraphSlider> {
   int index = 0;
+  List<List<double>> coordinates = [];
+  LatLng center = LatLng(0, 0);
+  List<List<double>> points = [];
+  Area? area;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.data.isNotEmpty) {
+      points = List<List<double>>.from(
+          widget.data[index][1].map((item) => List<double>.from(item)));
+      _fetchAreaData(widget.data[index][0]);
+    }
+  }
 
   void _onNext() {
     setState(() {
@@ -20,6 +37,10 @@ class _GraphSliderState extends State<GraphSlider> {
       } else if (index + 1 == widget.data.length) {
         index = 0;
       }
+      points = List<List<double>>.from(
+          widget.data[index][1].map((item) => List<double>.from(item)));
+
+      _fetchAreaData(widget.data[index][0]);
     });
   }
 
@@ -30,7 +51,22 @@ class _GraphSliderState extends State<GraphSlider> {
       } else if (index == 0) {
         index = widget.data.length - 1;
       }
+      points = List<List<double>>.from(
+          widget.data[index][1].map((item) => List<double>.from(item)));
+
+      _fetchAreaData(widget.data[index][0]);
     });
+  }
+
+  void _fetchAreaData(String title) async {
+    area = await firestoreDB.getAreaByTitle(title);
+
+    if (area != null) {
+      setState(() {
+        coordinates = area!.coordinates;
+        center = area!.centerCoordinates;
+      });
+    }
   }
 
   @override
@@ -45,7 +81,7 @@ class _GraphSliderState extends State<GraphSlider> {
               onPressed: _onPrevious,
             ),
             Text(
-              'Graph for session: ${index + 1}',
+              'Graph for session: ${widget.data[index][0]}',
               style: TextStyle(fontSize: 12),
             ),
             IconButton(
@@ -54,7 +90,10 @@ class _GraphSliderState extends State<GraphSlider> {
             ),
           ],
         ),
-        ScatterGraph(spots: widget.data[index][1]),
+        coordinates.isEmpty && points.isEmpty
+            ? CircularProgressIndicator()
+            : ScatterGraph(
+                spots: points, coordinates: coordinates, centeral: center),
       ],
     );
   }

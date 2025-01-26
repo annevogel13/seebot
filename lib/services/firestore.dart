@@ -75,6 +75,41 @@ class FirestoreService {
     return areas;
   }
 
+  Future<Area?> getAreaByTitle(String title) async {
+    QuerySnapshot querySnapshot =
+        await _areasCollection.where('title', isEqualTo: title).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      final doc = querySnapshot.docs.first;
+      final data = doc.data() as Map<String, dynamic>;
+      data['id'] = doc.id;
+
+      // changing the markers from json string to list of LatLng
+      final List<List<double>> markersList = [];
+
+      if (data['markers'] is String) {
+        final markers = jsonDecode(data['markers']);
+        for (var marker in markers) {
+          markersList.add([marker[0], marker[1]]);
+        }
+      } else {
+        for (var marker in data['markers']) {
+          final geoPoint = marker['geopoint'];
+          markersList.add([geoPoint.latitude, geoPoint.longitude]);
+        }
+      }
+
+      return Area(
+        id: data['id'],
+        title: data['title'],
+        description: data['description'],
+        status: data['status'],
+        coordinates: markersList,
+      );
+    }
+    return null;
+  }
+
   // update
   Future<void> updateArea(String docID, area) {
     return _areasCollection.doc(docID).update(area);
@@ -102,7 +137,7 @@ class FirestoreService {
         points.add([d['Latitude'], d['Longitude']]);
       }
 
-      graphData.add([element['id'], points]);
+      graphData.add([element['area'], points]);
     }
     return graphData;
   }
@@ -121,7 +156,6 @@ class FirestoreService {
     }
     for (var element in documents) {
       for (var d in element['datapoints']) {
-
         switch (d['Annotations']) {
           case 'driving':
             d['Annotations'] = CategorySeebot.driving;

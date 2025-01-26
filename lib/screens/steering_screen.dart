@@ -33,16 +33,18 @@ class _SteeringScreenState extends State<SteeringScreen> {
   void _startGyroscopeListener() {
     _gyroscopeSubscription = gyroscopeEventStream().listen((event) {
       setState(() {
+        final move = 0.000005;
+
         if (event.x < -0.5 && event.y > 0.5) {
-          _setDirection("Forward Right", 0.0001, 0.0001);
+          _setDirection("Forward Right", move, move);
         } else if (event.x < -0.5 && event.y < -0.5) {
-          _setDirection("Forward Left", 0.0001, -0.0001);
+          _setDirection("Forward Left", move, -move);
         } else if (event.x > 0.5) {
-          _setDirection("Backward", -0.0001, 0);
+          _setDirection("Backward", -move, 0);
         } else if (event.y > 0.5) {
-          _setDirection("Right", 0, 0.0001);
+          _setDirection("Right", 0, move);
         } else if (event.y < -0.5) {
-          _setDirection("Left", 0, -0.0001);
+          _setDirection("Left", 0, -move);
         }
       });
     });
@@ -52,7 +54,7 @@ class _SteeringScreenState extends State<SteeringScreen> {
     if (_direction != direction) {
       _direction = direction;
       _movementTimer?.cancel();
-      if (direction != "Stable") {
+      if (direction != "Idle") {
         _movementTimer = Timer.periodic(Duration(milliseconds: 100), (timer) {
           _moveSquare(latChange, lngChange);
         });
@@ -89,7 +91,7 @@ class _SteeringScreenState extends State<SteeringScreen> {
         children: [
           GoogleMap(
             onMapCreated: _onMapCreated,
-            mapToolbarEnabled  : false, 
+            mapToolbarEnabled: false,
             mapType: MapType.satellite,
             initialCameraPosition: CameraPosition(
               target: _squarePosition,
@@ -132,21 +134,50 @@ class _SteeringScreenState extends State<SteeringScreen> {
           Positioned(
               left: 5,
               bottom: 5,
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    // change the color of the marker
-                    isMowing = !isMowing;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: (!isMowing)? const Color.fromRGBO(53, 234, 53, 1): const Color.fromRGBO(53, 144, 234, 1)// Change this to your desired color
-                ),
-                child: Icon(
-                  Icons.grass_rounded,
-                  color : Colors.white,
-                  size: 30,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          // change the color of the marker
+                          isMowing = !isMowing;
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: (!isMowing)
+                              ? const Color.fromRGBO(53, 234, 53, 1)
+                              : const Color.fromRGBO(53, 144, 234,
+                                  1) // Change this to your desired color
+                          ),
+                      child: Icon(
+                        Icons.grass_rounded,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 10),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          // change the color of the marker
+                          _setDirection("Idle", 0, 0);
+                        });
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amber),
+                      child: Icon(
+                        Icons.pause_circle_outline,
+                        color: Colors.white, 
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ],
               ))
         ],
       ),
